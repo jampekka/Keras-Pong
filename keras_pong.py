@@ -1,13 +1,16 @@
 # Based on the excellent
 # https://gist.github.com/karpathy/a4166c7fe253700972fcbc77e4ea32c5
 # and uses Keras.
+#
+# Ported to Python 3 by Jami Pekkanen
+# Tested with the theano backend (tensorflow has issues with Python 3.7)
 import os
 import gym
 import cv2
 import argparse
 import sys, glob
 import numpy as np
-import cPickle as pickle
+import pickle
 from keras import backend as K
 import matplotlib.pyplot as plt
 from keras.models import Sequential
@@ -51,7 +54,7 @@ def pong_preprocess_screen(I):
 def discount_rewards(r):
   discounted_r = np.zeros_like(r)
   running_add = 0
-  for t in reversed(xrange(0, r.size)):
+  for t in reversed(range(0, r.size)):
     if r[t] != 0: running_add = 0
     running_add = running_add * gamma + r[t]
     discounted_r[t] = running_add
@@ -124,8 +127,8 @@ while True:
       #y_train[y_train<0] = 0
       #y_train[y_train>1] = 1
       #y_train = y_train / np.sum(np.abs(y_train), axis=1, keepdims=True)
-      print 'Training Snapshot:'
-      print y_train
+      print('Training Snapshot:')
+      print(y_train)
       model.train_on_batch(np.squeeze(np.vstack(train_X)), y_train)
       #Clear the batch
       train_X = []
@@ -136,9 +139,9 @@ while True:
       model.save_weights('pong_model_checkpoint.h5')
     #Reset the current environment nad print the current results
     running_reward = reward_sum if running_reward is None else running_reward * 0.99 + reward_sum * 0.01
-    print 'Environment reset imminent. Total Episode Reward: %f. Running Mean: %f' % (reward_sum, running_reward)
+    print('Environment reset imminent. Total Episode Reward: %f. Running Mean: %f' % (reward_sum, running_reward))
     reward_sum = 0
     observation = env.reset()
     prev_x = None
   if reward != 0:
-    print ('Episode %d Result: ' % episode_number) + ('Defeat!' if reward == -1 else 'VICTORY!')
+    print(('Episode %d Result: ' % episode_number) + ('Defeat!' if reward == -1 else 'VICTORY!'))
