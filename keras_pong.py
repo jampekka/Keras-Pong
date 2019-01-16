@@ -29,7 +29,7 @@ gamma = 0.99
 update_frequency = 1
 learning_rate = 0.001
 resume = False
-render = False
+render = True
 
 #Initialize
 env = gym.make("Pong-v0")

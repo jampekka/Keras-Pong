@@ -47,7 +47,7 @@ def get_model(input_shape, output_shape, learning_rate=0.001):
     return model, model
 
 possible_actions = np.array([
-        #0, # Nothing
+        0, # Nothing
         2, # Up
         5  # Down
         ])
