@@ -68,12 +68,13 @@ class FeatEnv:
         self.reset()
     
     def _get_feat(self):
-        #idx = [4, 12, 21, 49, 50, 51, 54, 56, 58, 60, 64, 67, 121, 122]
         # This reads the paddle and ball positions directly from the
         # atari emulator's memory. Note that these are available even when
         # the ball is invisible between rounds (when it goes all the way up).
         # This hampers the learning somewhat as the paddle tends to go to up
         # in the beginning.
+        
+        #idx = [4, 12, 21, 49, 50, 51, 54, 56, 58, 60, 64, 67, 121, 122]
         idx = [54, 49, 21, 51]
         bally, ballx, oppy, playery = self.env.env._get_ram()[idx].astype(float)/206 - 0.5
         #playery += 38
@@ -86,12 +87,14 @@ class FeatEnv:
             playery - bally
             ])
 
-
+    
     def step(self, action):
         observation, reward, done, info = self.env.step(action)
         self.prev_screen = self.current_screen
         #self.current_screen = pong_preprocess_screen(observation)
         self.current_screen = self._get_feat()
+        # Use this to include the previous frame too. Has to be
+        # changed in the reset-method too (sorry for ugly unDRYness).
         #self.current_feat = np.hstack((self.current_screen, self.prev_screen))
         self.current_feat = self.current_screen
         return self.current_feat, reward, done, info
